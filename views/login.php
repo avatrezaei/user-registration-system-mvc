@@ -1,62 +1,64 @@
-<?php
- 
-require_once '../controllers/UserController.php';
+<?php include 'templates/header.php'; ?>
 
- 
-$userController = new UserController();
+<script>
+    function validateForm() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
- 
-$error_message = '';
-
- 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-   
-    $username = htmlspecialchars($_POST['username']);
-    $password = htmlspecialchars($_POST['password']);
-
-    
-    if (empty($username) || empty($password)) {
-        $error_message = 'All fields are required.';
-    } else {
-         
-        $result = $userController->login($username, $password);
-
-        if ($result['success']) { 
-            header('Location: profile.php');
-            exit;
-        } else {
-            $error_message = $result['message'];
+        if (username.trim() === '') {
+            alert('Please enter your username.');
+            return false;
         }
+
+        if (password.trim() === '') {
+            alert('Please enter your password.');
+            return false;
+        }
+
+        // Check if the username contains special characters
+        const usernameRegex = /^[a-zA-Z0-9]+$/;
+        if (!usernameRegex.test(username)) {
+            alert('Username should only contain letters and numbers.');
+            return false;
+        }
+
+        // Check if the password meets the minimum length requirement
+        if (password.length < 8) {
+            alert('Password should be at least 8 characters long.');
+            return false;
+        }
+
+        return true;
     }
-}
-?>
+</script>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
-</head>
-<body>
+<div class="form-v5-content">
+    <form class="form-detail" action="#" method="post" onsubmit="return validateForm()">
+        <h2>Login</h2>
+        <?php if (!empty($data['error'])) : ?>
+            <div class="error-message-box">
+                <div class="error-message"><?php echo $data['error']; ?></div>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($data['success'])) : ?>
+            <div class="success-message-box">
+                <div class="success-message"><?php echo $data['success']; ?></div>
+            </div>
+        <?php endif; ?>
+        <div class="form-row">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="input-text" placeholder="Your Username" required>
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="form-row">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="input-text" placeholder="Your Password" required>
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="form-row-last">
+            <input type="submit" name="login" class="register" value="Login">
+        </div>
+    </form>
+</div>
 
-<h1>User Login</h1>
-
- 
-<?php if (!empty($error_message)) : ?>
-    <div class="error-message"><?php echo $error_message; ?></div>
-<?php endif; ?>
-
- 
-<form method="post" action="login.php">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username" required><br><br>
-    
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
-    
-    <input type="submit" value="Login">
-</form>
-
-</body>
-</html>
+<?php include 'templates/footer.php'; ?>

@@ -1,10 +1,13 @@
 <?php
+namespace App\Models; 
 
-require_once '../config.php';
+use \PDO;
+use \PDOException;
 
 class Database
 {
-    public $conn;
+    private $conn;
+    private static $instance; 
 
     public function __construct()
     {
@@ -14,7 +17,17 @@ class Database
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
+    } 
+
+    public static function getInstance() {
+        if (!self::$instance) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
     }
 
+    public function getConnection() {
+        return $this->conn;
+    }
     
 }

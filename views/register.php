@@ -1,69 +1,37 @@
-<?php
-// Import the necessary classes
-require_once '../controllers/UserController.php';
+<?php include 'templates/header.php'; ?>
 
-// Create a new instance of the UserController
-$userController = new UserController();
+<div class="form-v5-content">
+    <form class="form-detail" action="#" method="post">
+        <h2>Register</h2>
+        <?php if (!empty($data['error'])) : ?>
+            <div class="error-message-box">
+                <div class="error-message"><?php echo $data['error']; ?></div>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($data['success'])) : ?>
+            <div class="success-message-box">
+                <div class="success-message"><?php echo $data['success']; ?></div>
+            </div>
+        <?php endif; ?>
+        <div class="form-row">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="input-text" placeholder="username" required>
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="form-row">
+            <label for="your-email">Email</label>
+            <input type="email" name="email" id="email" class="input-text" placeholder="email" required pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="form-row">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="input-text" placeholder="password" required>
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="form-row-last">
+            <input type="submit" name="register" class="register" value="Register">
+        </div>
+    </form>
+</div>
 
-// Define variables to hold error messages or success message
-$error_message = '';
-$success_message = '';
-
-// Check if the form has been submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect and sanitize input
-    $username = htmlspecialchars($_POST['username']);
-    $email = htmlspecialchars($_POST['email']);
-    $password = htmlspecialchars($_POST['password']);
-
-    // Validate input (this is a very basic validation, you might want to expand on this)
-    if (empty($username) || empty($email) || empty($password)) {
-        $error_message = 'All fields are required.';
-    } else {
-        // Attempt to register the user using the UserController
-        $result = $userController->register($username, $email, $password);
-
-        if ($result['success']) {
-            $success_message = $result['message'];
-        } else {
-            $error_message = $result['message'];
-        }
-    }
-}
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
-</head>
-<body>
-
-<h1>User Registration</h1>
-
-<!-- Display error or success message -->
-<?php if (!empty($error_message)) : ?>
-    <div class="error-message"><?php echo $error_message; ?></div>
-<?php endif; ?>
-<?php if (!empty($success_message)) : ?>
-    <div class="success-message"><?php echo $success_message; ?></div>
-<?php endif; ?>
-
-<!-- Registration Form -->
-<form method="post" action="register.php">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username" required><br><br>
-    
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required><br><br>
-    
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
-    
-    <input type="submit" value="Register">
-</form>
-
-</body>
-</html>
+<?php include 'templates/footer.php'; ?>
